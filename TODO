@@ -1,0 +1,41 @@
+# Tasks
+
+[+] Create layer that will provide `bool finesword_supports_Nbit_float(void)` and equivalents
+for binaryN and DecimalN specifically
+[+] After the layer, run CI/CD and check the actual reported values across platforms
+[+] Fix exhaustive.c (see notes in web)
+[+] After making types.h, explicitly document that UN_C()/IN_C()/FN_C() macros correspondi to
+uint32_t etc. e.i. exact-width types, rather than (as C traditionally does it) uint32_least or
+whatever it's called
+[ ] We seem to shall to provide formatOf operations... or it's not *our* layer?
+    - define what *our* layer means clearly in the [README.md](README.md)
+[ ] Add additional checks for IEEE constants (e.g., sign, exp, and mant masks are non-overlapping)
+[~] In top level umbrella include header #undef ALL the internal macros
+[~] Incorporate Berkeley's SoftFloat (at least test it)
+    - tested. Incorporation is still under questioning, because they are mostly
+     one layer deeper (they provide functions that we depend on, i.e., to let compiler figure out) 
+[ ] Investigate the incoherent FPU failure on HPPA
+[ ] Figure out the strategy for reference functions
+    [ ] TODO: Fix /reference/ layer because it's wrong, non-portable and stupid
+[ ] Figure out why finesword library still links against libc
+[ ] Think about adding RISC-V, LoongArch, or PowerPC.
+[ ] Add linting with cppcheck to CI
+[ ] Think about noting in README that we use (or at least try to use) RCC2119
+[ ] TODO: Add verification for plus_constants.h
+[ ] Note in README that users can -D FINESWROD_TARGET_16/128BIT_FLOAT=1/0
+[ ] Add speed/performance tests
+    [~] Read *Scrambled Linear Pseudorandom Number Generators* from start to end
+    [+] Implement xoshiro256++ or xoshiro256** (choose one) 
+    [+] Read/implement splitmix64 for seeding
+    [ ] Add visual PPM test for generate_pool() to fun/
+    [ ] Create the performance tester/dispatcher
+    [ ] Dump pointers (to allocated memory) with PRIXPTR+uintptr/%p (so their alignement can be checked)
+    [ ] Add ns_now_helper() for _WIN32 branch in sys_helpers.h
+[ ] Think about licensing testing infrastructure under GPL rather than LGPL which doesn't make much of sense
+[ ] Figure out versions of this library/test suite (also, test suite of testing infrastructure?),
+    since it becomes important with the addition of PRNGs  
+[ ] Figure out registry
+[ ] Add ./cmake_compile_san.sh to auxiliary/
+[ ] Check whether ./manual_compile.sh is up to date with the CMake configuration
+[ ] Add (to the performance test) timers for ins/op cyc/op IPC bra/op etc.
+[ ] TODO fix inconsistencies in <> vs [] for describing arguments

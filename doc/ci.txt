@@ -1,0 +1,87 @@
+NOTE #1
+    Older Clang (18.1.3) on x86-64 seems to miscompile the following function under
+    -O2 .. -ffp-model=strict -ffp-exception-behavior=strict
+
+    source:
+        f16 abs_reference_f16(f16 x) {
+            u16 xi = asuint_f16(x);
+            xi &= F16_ABS_MASK;
+            return asfloat_u16(xi);
+        }
+
+    correct codegen:
+    0000000000005d90 <abs_reference_f16>:
+        5d90:	c4 e2 79 79 0d 47 27 	vpbroadcastw 0x2747(%rip),%xmm1        # 84e0 <_IO_stdin_used+0x14e0>
+        5d97:	00 00 
+        5d99:	c5 f9 db c1          	vpand  %xmm1,%xmm0,%xmm0
+        5d9d:	c3                   	ret
+        5d9e:	66 90                	xchg   %ax,%ax
+
+    Clang 18.1.3:
+    00000000000058f0 <abs_reference_f16>:
+        58f0:	c4 e2 79 18 0d 0b 17 	vbroadcastss 0x170b(%rip),%xmm1        # 7004 <_IO_stdin_used+0x4>
+        58f7:	00 00 
+        58f9:	c5 f9 c5 c0 00       	vpextrw $0x0,%xmm0,%eax
+        58fe:	0f b7 c0             	movzwl %ax,%eax
+        5901:	c5 f9 6e c0          	vmovd  %eax,%xmm0
+        5905:	c4 e2 79 13 c0       	vcvtph2ps %xmm0,%xmm0
+        590a:	c5 f8 54 c1          	vandps %xmm1,%xmm0,%xmm0
+        590e:	c4 e3 79 1d c0 04    	vcvtps2ph $0x4,%xmm0,%xmm0
+        5914:	c5 f9 7e c0          	vmovd  %xmm0,%eax
+        5918:	c5 f9 c4 c0 00       	vpinsrw $0x0,%eax,%xmm0,%xmm0
+        591d:	c3                   	ret
+        591e:	66 90                	xchg   %ax,%ax
+
+    Failure: incorrect behavior around signaling NaNs (and more)
+
+    Adding `volatile` to u16 xi partly fixes it:
+    0000000000005970 <abs_reference_f16>:
+        5970:	c4 e3 79 15 44 24 fe 	vpextrw $0x0,%xmm0,-0x2(%rsp)
+        5977:	00 
+        5978:	66 81 64 24 fe ff 7f 	andw   $0x7fff,-0x2(%rsp)
+        597f:	c5 f9 c4 44 24 fe 00 	vpinsrw $0x0,-0x2(%rsp),%xmm0,%xmm0
+        5986:	c3                   	ret
+        5987:	66 0f 1f 84 00 00 00 	nopw   0x0(%rax,%rax,1)
+        598e:	00 00 
+    and newer releases also work correctly (e.g., 22.1.8 as in 'correct codegen' example above)
+
+    note: this seems to be directly related to [this](https://github.com/llvm/llvm-project/issues/104915)
+
+NOTE #2
+    with the following source:
+    f16 w_minus_f16(f16 x) {
+
+        return -(x);
+    }
+
+    $ clang --version                    
+    clang version 22.1.8
+    Target: x86_64-pc-linux-gnu
+    Thread model: posix
+    InstalledDir: /usr/bin
+    $ export CC=clang
+    $ ./cmake_compile.sh > /dev/null 2>&1
+    $ objdump -d build/main | grep -A 18 "<w_minus_f16>:"
+    00000000000097b0 <w_minus_f16>:
+        97b0:	c4 e2 79 18 0d 53 18 	vbroadcastss 0x1853(%rip),%xmm1        # b00c <_IO_stdin_used+0xc>
+        97b7:	00 00 
+        97b9:	c5 f9 c5 c0 00       	vpextrw $0x0,%xmm0,%eax
+        97be:	0f b7 c0             	movzwl %ax,%eax
+        97c1:	c5 f9 6e c0          	vmovd  %eax,%xmm0
+        97c5:	c4 e2 79 13 c0       	vcvtph2ps %xmm0,%xmm0
+        97ca:	c5 f8 57 c1          	vxorps %xmm1,%xmm0,%xmm0
+        97ce:	c5 f0 57 c9          	vxorps %xmm1,%xmm1,%xmm1
+        97d2:	c5 f2 10 c0          	vmovss %xmm0,%xmm1,%xmm0
+        97d6:	c4 e3 79 1d c0 04    	vcvtps2ph $0x4,%xmm0,%xmm0
+        97dc:	c3                   	ret
+        97dd:	0f 1f 00             	nopl   (%rax)
+
+    00000000000097e0 <w_minus_f128>:
+        97e0:	c5 f8 57 05 f8 34 00 	vxorps 0x34f8(%rip),%xmm0,%xmm0        # cce0 <_IO_stdin_used+0x1ce0>
+        97e7:	00 
+        97e8:	c3                   	ret
+        97e9:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+    
+    which is wrong by obvious reasons.
+    
+    note: it seems to be related to [this](https://github.com/llvm/llvm-project/issues/126892) and [this](https://github.com/llvm/llvm-project/issues/188201)

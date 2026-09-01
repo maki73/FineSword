@@ -1,0 +1,50 @@
+// SPDX-License-Identifier: LGPL-2.1-or-later
+/*
+ * Copyright (C) 2026 Mark H. (aka maki73)
+ *
+ * This file is part of FineSword Math Library.
+ * See COPYING and COPYING.LESSER for the full license text.
+ */
+
+#ifndef FINESWORD_FINESWORD_H
+#define FINESWORD_FINESWORD_H
+
+#include "finesword/scalar/sign.h"
+#include "finesword/scalar/classify.h"
+
+#ifdef FINESWORD_STATIC_ASSERT
+#   undef FINESWORD_STATIC_ASSERT
+#endif
+#ifdef FINESWORD_STATIC_ASSERT_1
+#   undef FINESWORD_STATIC_ASSERT_1
+#endif
+#ifdef FINESWORD_STATIC_ASESRT_2
+#   undef FINESWORD_STATIC_ASESRT_2
+#endif
+
+#ifdef FINESWORD_U128_C_HI_LO
+#   undef FINESWORD_U128_C_HI_LO
+#endif
+
+/* NOTE: Delete this after we will stop lying */
+#ifdef U128_C
+#   undef U128_C
+#endif
+
+#ifdef FINESWORD_TEMPLATE_SPECIALIZE
+#   undef FINESWORD_TEMPLATE_SPECIALIZE
+#endif
+#ifdef FINESWORD_PUSH_SIGNATURES_HOMOGENEOUS_UNARY
+#   undef FINESWORD_PUSH_SIGNATURES_HOMOGENEOUS_UNARY
+#endif
+#ifdef FINESWORD_PUSH_SIGNATURES_PREDICATE_UNARY
+#   undef FINESWORD_PUSH_SIGNATURES_PREDICATE_UNARY
+#endif
+#ifdef FINESWORD_PUSH_SIGNATURES_HOMOGENEOUS_BINARY
+#   undef FINESWORD_PUSH_SIGNATURES_HOMOGENEOUS_BINARY
+#endif
+#ifdef FINESWORD_PUSH_SIGNATURES_PREDICATE_BINARY
+#   undef FINESWORD_PUSH_SIGNATURES_PREDICATE_BINARY
+#endif
+
+#endif /* FINESWORD_FINESWORD_H */

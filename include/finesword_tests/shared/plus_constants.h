@@ -1,0 +1,90 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+/*
+ * Copyright (C) 2026 Mark H. (aka maki73)
+ *
+ * This file is part of FineSword Math Library's Testing Infrastructure.
+ * See COPYING and COPYING.LESSER for the full license text.
+ */
+
+#ifndef FINESWORD_TESTS_SHARED_PLUS_CONSTANTS_H
+#define FINESWORD_TESTS_SHARED_PLUS_CONSTANTS_H
+
+#include "finesword/rudiments/types.h"
+#include "finesword/config.h"
+
+/* Big Thanks to Julia REPL
+ */
+
+// NOTE: These would definitely need some verification
+
+/* -- Additional Constants -- */
+
+#define F32_EPS_AT_ONE     U32_C(0x34000000)
+#define F32_BITS_ONE       U32_C(0x3f800000)
+#define F32_NEXTFLOAT_ONE  U32_C(0x3f800001)
+#define F32_PREVFLOAT_ONE  U32_C(0x3f7fffff)
+#define F32_BITS_PI        U32_C(0x40490fdb)
+#define F32_BITS_TWO_PI    U32_C(0x40c90fdb) // 2\pi
+#define F32_BITS_PI_TWO    U32_C(0x411de9e6) // \pi^2
+#define F32_BITS_INV_PI    U32_C(0x3ea2f983) // \pi^{-1}
+#define F32_BITS_EULER     U32_C(0x402df854)
+#define F32_BITS_INV_EULER U32_C(0x3ebc5ab2) // \mathrm{e}^{-1}
+#define F32_BITS_SQRT_TWO  U32_C(0x3fb504f3) // \sqrt{2}
+#define F32_BITS_PHI       U32_C(0x3fcf1bbd) // \phi
+
+#define F64_EPS_AT_ONE     U64_C(0x3cb0000000000000)
+#define F64_BITS_ONE       U64_C(0x3ff0000000000000)
+#define F64_NEXTFLOAT_ONE  U64_C(0x3ff0000000000001)
+#define F64_PREVFLOAT_ONE  U64_C(0x3fefffffffffffff)
+#define F64_BITS_PI        U64_C(0x400921fb54442d18)
+#define F64_BITS_TWO_PI    U64_C(0x401921fb54442d18)
+#define F64_BITS_PI_TWO    U64_C(0x4023bd3cc9be45de)
+#define F64_BITS_INV_PI    U64_C(0x3fd45f306dc9c883)
+#define F64_BITS_EULER     U64_C(0x4005bf0a8b145769)
+#define F64_BITS_INV_EULER U64_C(0x3fd78b56362cef38)
+#define F64_BITS_SQRT_TWO  U64_C(0x3ff6a09e667f3bcd)
+#define F64_BITS_PHI       U64_C(0x3ff9e3779b97f4a8)
+
+// optional
+#if FINESWORD_TARGET_16BIT_FLOAT
+    #define F16_EPS_AT_ONE     U16_C(0x1400)
+    #define F16_BITS_ONE       U16_C(0x3c00)
+    #define F16_NEXTFLOAT_ONE  U16_C(0x3c01)
+    #define F16_PREVFLOAT_ONE  U16_C(0x3bff)
+    #define F16_BITS_PI        U16_C(0x4248)
+    #define F16_BITS_TWO_PI    U16_C(0x4648)
+    #define F16_BITS_PI_TWO    U16_C(0x48ef)
+    #define F16_BITS_INV_PI    U16_C(0x3518)
+    #define F16_BITS_EULER     U16_C(0x4170)
+    #define F16_BITS_INV_EULER U16_C(0x35e3)
+    #define F16_BITS_SQRT_TWO  U16_C(0x3da8)
+    #define F16_BITS_PHI       U16_C(0x3e79)
+#endif
+#if FINESWORD_TARGET_128BIT_FLOAT
+    #define F128_EPS_AT_ONE \
+        FINESWORD_U128_C_HI_LO(U64_C(0x3F8F000000000000), U64_C(0x0000000000000000))
+    #define F128_BITS_ONE \
+        FINESWORD_U128_C_HI_LO(U64_C(0x3FFF000000000000), U64_C(0x0000000000000000))
+    #define F128_NEXTFLOAT_ONE \
+        FINESWORD_U128_C_HI_LO(U64_C(0x3FFF000000000000), U64_C(0x0000000000000001))
+    #define F128_PREVFLOAT_ONE \
+        FINESWORD_U128_C_HI_LO(U64_C(0x3FFEFFFFFFFFFFFF), U64_C(0xFFFFFFFFFFFFFFFF))
+    #define F128_BITS_PI \
+        FINESWORD_U128_C_HI_LO(U64_C(0x4000921FB54442D1), U64_C(0x8469898CC51701B8))
+    #define F128_BITS_TWO_PI \
+        FINESWORD_U128_C_HI_LO(U64_C(0x4001921FB54442D1), U64_C(0x8469898CC51701B8))
+    #define F128_BITS_PI_TWO \
+        FINESWORD_U128_C_HI_LO(U64_C(0x40023BD3CC9BE45D), U64_C(0xE5A4ADC4D9B30118))
+    #define F128_BITS_INV_PI \
+        FINESWORD_U128_C_HI_LO(U64_C(0x3FFD45F306DC9C88), U64_C(0x2A53F84EAFA3EA6A))
+    #define F128_BITS_EULER \
+        FINESWORD_U128_C_HI_LO(U64_C(0x40005BF0A8B14576), U64_C(0x95355FB8AC404E7A))
+    #define F128_BITS_INV_EULER \
+        FINESWORD_U128_C_HI_LO(U64_C(0x3FFD78B56362CEF3), U64_C(0x7C6AEB7B1E0A4154))
+    #define F128_BITS_SQRT_TWO \
+        FINESWORD_U128_C_HI_LO(U64_C(0x3FFF6A09E667F3BC), U64_C(0xC908B2FB1366EA95))
+    #define F128_BITS_PHI \
+        FINESWORD_U128_C_HI_LO(U64_C(0x3FFF9E3779B97F4A), U64_C(0x7C15F39CC0605CEE))
+#endif
+
+#endif /* FINESWORD_TESTS_SHARED_PLUS_CONSTANTS_H */
