@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
@@ -12,9 +12,9 @@
 # -- Config
 
 FILES="
-    ./src/*.c src/*/*.c
-    ./include/*/*.h include/*/*/*.h
-    ./tests/*.c tests/*/*.c tests/*/*/*.c
+    src/*.c src/*/*.c
+    include/*/*.h include/*/*/*.h
+    tests/*.c tests/*/*.c tests/*/*/*.c
 "
 
 MISRA_RULES=(

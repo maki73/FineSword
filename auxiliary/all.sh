@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
@@ -17,7 +17,7 @@ echo "[~] ./auxiliary/newline.py..."
 echo "[~] ./auxiliary/guard.py..."
 ./auxiliary/guard.py
 
-echo "[~] ./auxiliary/license.sh..."
+echo "[~] ./auxiliary/license.py..."
 ./auxiliary/license.py
 
 echo "[~] ./auxiliary/rules.sh..."

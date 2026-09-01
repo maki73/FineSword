@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
@@ -14,7 +14,7 @@ BUILD_DIR="build"
 TESTS="ON"
 
 echo "[~] Configuring CMake (build dir: $BUILD_DIR; tests: $TESTS)"
-cmake -S . -B "$BUILD_DIR" -DENABLE_TESTS="$TESTS" CMAKE_BUILD_TYPE=Release
+cmake -S . -B "$BUILD_DIR" -DENABLE_TESTS="$TESTS" -DCMAKE_BUILD_TYPE=Release
 
 echo "[~] Building the project..."
 cmake --build "$BUILD_DIR" --config Release --parallel $(nproc)

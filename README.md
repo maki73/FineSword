@@ -56,7 +56,7 @@ move to the cloned directory (e.g., with 'cd finesword/')
 
 generate the projects build system and compile:
 ```bash
-$ cmake -S . -B build -DENABLE_TESTS=TRUE CMAKE_BUILD_TYPE=Release
+$ cmake -S . -B build -DENABLE_TESTS=TRUE -DCMAKE_BUILD_TYPE=Release
 $ cmake --build build --config Release
 ```
 that will compile the `finesword` shared library (Finesword Math Libary)
