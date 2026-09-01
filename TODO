@@ -20,7 +20,7 @@ whatever it's called
 [ ] Figure out why finesword library still links against libc
 [ ] Think about adding RISC-V, LoongArch, or PowerPC.
 [ ] Add linting with cppcheck to CI
-[ ] Think about noting in README that we use (or at least try to use) RCC2119
+[ ] Think about noting in README that we use (or at least try to use) BCP 14 (RFC2119 and RFC 8174)
 [ ] TODO: Add verification for plus_constants.h
 [ ] Note in README that users can -D FINESWROD_TARGET_16/128BIT_FLOAT=1/0
 [ ] Add speed/performance tests

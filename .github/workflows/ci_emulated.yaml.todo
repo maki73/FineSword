@@ -1,0 +1,29 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# Copyright (C) 2026 Mark H. (aka maki73)
+#
+# This file is part of FineSword Math Library Testing Infrastructure.
+# See COPYING and COPYING.LESSER for the full license text.
+#
+name: FineSword CI (Emulated)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo "TODO:"
+        exit 0
+
+# TODO:
+# Currently simply tested locally with QEMU VMs, which is a really
+# good way to slowly turn into a "runs on my machine" project.
+# TL;DR:
+#    add AArch64 FreeBSD GCC & Clang (no  exhaustive tests)
+#    add s390x   Linux   GCC         (yes exhaustive tests)
+#    add PA-RISC NetBSD  GCC         (no  exhaustive tests)
