@@ -17,8 +17,12 @@
 
 /* See doc/ci.txt note 2
  */
-#define LLVM_USE_EXPLICIT_BIT_W_FNEG_F16 1
-
+#define     LLVM_USE_EXPLICIT_BIT_W_FNEG_F16 1
+#if defined(__i386__) || defined(__x86_64__)
+    #define X86_USE_EXPLICIT_BIT_W_FABS_F16  1
+#else
+    #define X86_USE_EXPLICIT_BIT_W_FABS_F16  0
+#endif
 
 /*  --- Abs() --- */
 
@@ -33,7 +37,13 @@ f64 w_fabs(f64 x) {
 
 #if FINESWORD_TARGET_16BIT_FLOAT
     f16 w__builtin_fabsf16(f16 x) {
-        return (f16)__builtin_fabsf16(x);
+        #if X86_USE_EXPLICIT_BIT_W_FABS_F16
+            volatile u16 xi = asuint_f16(x);
+            xi &= F16_ABS_MASK;
+            return asfloat_u16(xi);
+        #else
+            return (f16)__builtin_fabsf16(x);
+        #endif
     }
 #endif
 #if FINESWORD_TARGET_128BIT_FLOAT
@@ -58,7 +68,7 @@ f64 w_fneg_f64(f64 x) {
      */
     f16 w_fneg_f16(f16 x) {
         #if LLVM_USE_EXPLICIT_BIT_W_FNEG_F16
-            u16 xi = asuint_f16(x);
+            volatile u16 xi = asuint_f16(x);
             xi ^= F16_SIGN_MASK;
             return asfloat_u16(xi);
         #else

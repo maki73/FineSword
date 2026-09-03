@@ -59,6 +59,14 @@ else()
     set(FINESWORD_IS_INTELLLVM FALSE)
 endif()
 
+# ARM Target Architecture
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|AArch64|arm|ARM|arm64|ARM64)")
+    message(STATUS "IS_ARM       = TRUE")
+    set(FINESWORD_IS_ARM TRUE)
+else()
+    message(STATUS "IS_ARM       = FALSE")
+    set(FINESWORD_IS_ARM FALSE)
+endif()
 
 # --- configure options ---
 

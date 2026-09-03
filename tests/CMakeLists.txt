@@ -99,6 +99,10 @@ elseif(FINESWORD_IS_LLVM)
         -Wcast-qual -Wvla -Wunused-variable -Wunused-value
         -Wno-unused-function
         -ffp-model=strict -ffp-exception-behavior=strict
+
+        # try fixing doc/ci.txt note 2 with this
+        # ARM does not expose -fexcess-precision=16 option (it handles 16-bit float natively) 
+        $<$<NOT:$<BOOL:${FINESWORD_IS_ARM}>>:-fexcess-precision=16>
     )
 else()
     message(STATUS "Tests: using generic GCC-style target compile options")
@@ -111,7 +115,10 @@ else()
         -Wno-unused-function
         -Wno-unknown-pragmas
         -fsignaling-nans -frounding-math # new
-        $<$<BOOL:$(FINESWORD_IS_TINYCC)>:-w>
+        $<$<BOOL:${FINESWORD_IS_TINYCC}>:-w>
+        
+        # Add these here
+        -fsignaling-nans -frounding-math
     )
 endif()
 

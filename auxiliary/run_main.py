@@ -17,7 +17,7 @@ import time as t
 BUILD_DIR="./build"
 
 def main():
-    if os.name == "nt":
+    if os.name == "nt": # maybe change to platform.system()? but it works so don't touch it
         exec_matches = list(Path(BUILD_DIR).rglob("main.exe"))
     else:
         exec_matches = list(Path(BUILD_DIR).rglob("main"))

@@ -85,3 +85,31 @@ NOTE #2
     which is wrong by obvious reasons.
     
     note: it seems to be related to [this](https://github.com/llvm/llvm-project/issues/126892) and [this](https://github.com/llvm/llvm-project/issues/188201)
+
+NOTE #3:
+    I am genuinely flabbergasted at how terrible optimizing compilers can be (especially LLVM)
+    Clang 18.1.3 literally generated THIS
+    0000000000001660 <abs_f16>:
+        1660:	c5 f9 c5 c0 00       	vpextrw $0x0,%xmm0,%eax
+        1665:	0f b7 c0             	movzwl %ax,%eax
+        1668:	c5 f9 6e c0          	vmovd  %eax,%xmm0
+        166c:	c4 e2 79 13 c0       	vcvtph2ps %xmm0,%xmm0
+        1671:	62 f1 7c 18 54 05 89 	vandps 0x989(%rip){1to4},%xmm0,%xmm0        # 2004 <_fini+0x8c4>
+        1678:	09 00 00 
+        167b:	c4 e3 79 1d c0 04    	vcvtps2ph $0x4,%xmm0,%xmm0
+        1681:	c5 f9 7e c0          	vmovd  %xmm0,%eax
+        1685:	c5 f9 c4 c0 00       	vpinsrw $0x0,%eax,%xmm0,%xmm0
+        168a:	c3                   	ret
+        168b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+    
+    from THIS
+    #define TEMPLATE_ABS_FN_1(N)   \
+    f##N abs_f##N (f##N x) {       \
+        u##N xi = asuint_f##N (x); \
+        xi &= F##N##_ABS_MASK;     \
+        return  asfloat_u##N (xi); \
+    }
+    X(TEMPLATE_ABS_FN_1)
+
+    Absolutely astonishing, and kcuf all people who say "compiler is smarter than you"...
+    well, for them maybe it's the case. 

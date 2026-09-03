@@ -15,11 +15,17 @@
 
 #define X(x) FINESWORD_TEMPLATE_SPECIALIZE(x)
 
+#if defined(__clang_major__) && __clang_major__ < 22
+    #define Y volatile // optimizing compiler tax
+#else
+    #define Y
+#endif
+
 /* --- negate() --- */
 
 #define TEMPLATE_NEGATE_FN_1(N) \
 f##N negate_f##N (f##N x) {     \
-    u##N xi = asuint_f##N (x);  \
+    Y u##N xi = asuint_f##N (x);  \
     xi ^= F##N##_SIGN_MASK;     \
     return asfloat_u##N (xi);   \
 }
@@ -29,7 +35,7 @@ X(TEMPLATE_NEGATE_FN_1)
 
 #define TEMPLATE_ABS_FN_1(N)   \
 f##N abs_f##N (f##N x) {       \
-    u##N xi = asuint_f##N (x); \
+    Y u##N xi = asuint_f##N (x); \
     xi &= F##N##_ABS_MASK;     \
     return  asfloat_u##N (xi); \
 }
@@ -39,8 +45,8 @@ X(TEMPLATE_ABS_FN_1)
 
 #define TEMPLATE_COPYSIGN_FN_1(N)     \
 f##N copysign_f##N (f##N x, f##N y) { \
-    u##N xi = asuint_f##N (x);        \
-    u##N yi = asuint_f##N (y);        \
+    Y u##N xi = asuint_f##N (x);        \
+    Y u##N yi = asuint_f##N (y);        \
     xi &= F##N##_ABS_MASK;            \
     yi &= F##N##_SIGN_MASK;           \
     xi |= yi;                         \

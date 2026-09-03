@@ -128,12 +128,16 @@ typedef unsigned long long   u64;
  * since C24/C23 defines bool,true,false as *keywords*. 
  */
 #ifndef __bool_true_false_are_defined
-    /* [C99 \S 7.16 \P 4] even allows to
-    undefine & redefine bool,true, and false macro.
+    /* wouldn't be exactly correct per C *if* we were <stdbool.h>
+     because these are unsuitable for use in #if preprocessing directive(s)
+     Nevertheless, defining them as simply '1' and '0'
+     would conflict with the Rule 10.3 and [C99 \S 7.16 \P 4]
+     even allows to undefine/redefine bool, true, and false macros.
     */
     #define bool _Bool
     #define true  ((_Bool)1)
     #define false ((_Bool)0)
+    #define __bool_true_false_are_defined 1
 #endif
 
 

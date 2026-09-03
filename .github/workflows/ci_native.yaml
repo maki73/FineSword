@@ -144,12 +144,5 @@ jobs:
       - name: Test All Exhaustive
         if: matrix.compiler != 'TinyCC'
         run: |
-          python auxiliary/comprehensive.py
-          # python auxiliary/run_main.py show_supported
-          # python auxiliary/run_main.py xoshiro256pp 0x73
-          # python auxiliary/run_main.py unary32
-          # python auxiliary/run_main.py list_binary64
-          # python auxiliary/run_main.py list_binary128
-          # python auxiliary/run_main.py test negate_f64
-          # python auxiliary/run_main.py binary16
-          # objdump -d build/main | grep -A 20 "<abs_reference_f16>:"
+          python auxiliary/comprehensive_self.py
+          python auxiliary/functions_extern.py
