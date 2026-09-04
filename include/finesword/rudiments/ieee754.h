@@ -56,8 +56,8 @@
  * -- NaNs:
  * Encoding:
  * - IEEE 754's preferred encoding (under "should" phrasing)
- *   states that **qNaN SCHOULD be encoded with d1 set to 1**.
- * - A **sNaN SCHOULD be encoded with d1 set to 0**.
+ *   states that **qNaN SHOULD be encoded with d1 set to 1**.
+ * - A **sNaN SHOULD be encoded with d1 set to 0**.
  * - If d1 is 0, then some other bit MUST be non-zero to distinguish
  *   NaN from Inf.
  * - NOTE: since it's under SHOULD rather than SHALL phrasing,
@@ -76,7 +76,7 @@
  * - NOTE: In binary interchange formats, all number and NaN encodings are canonical.
  *
  *
- * NOTE: this project uses 'mantissa' and 'trailing significant' interchangbly
+ * NOTE: this project uses 'mantissa' and 'trailing significant' interchangeably
  */
 
 

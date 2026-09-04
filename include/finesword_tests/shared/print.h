@@ -16,7 +16,7 @@
 
 
 /* NOTE: I/O failures (such as fprintf() returning value less than zero)
- * are considered fatal erros and will abort immediately. 
+ * are considered fatal errors and will abort immediately. 
  */
 
 #if defined(__GNUC__) || defined(__clang__) // Clang also defines __GNUC__, but don't rely on it

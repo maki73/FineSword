@@ -152,6 +152,8 @@ if(MSVC)
         /permissive- /Zc:preprocessor
         /w14242 /w14244 /w14254 /w14267 /w14365
         /w14545 /w14546 /w14547 /w14549 /w14555
+
+        /DFINESWORD_VERSION="${FINESWORD_VERSION}"
     )
     set_target_properties(finesword PROPERTIES
         WINDOWS_EXPORT_ALL_SYMBOLS TRUE
@@ -176,6 +178,8 @@ elseif(FINESWORD_IS_LLVM)
         # directly fixes ICX's complaints about STDC FENV_ACCESS,
         # indirectly sets the right tone for all LLVM-based compilers
         -ffp-model=strict -ffp-exception-behavior=strict # NOTE: GCC does not recognize these
+
+        -DFINESWORD_VERSION="${FINESWORD_VERSION}"
     )
 else()
     message(STATUS "Library: using generic GCC-style target compile options")
@@ -183,7 +187,9 @@ else()
         -O2 -march=native
 
         -ffreestanding -nostdinc -nostdlib
-        $<$<NOT:$<BOOL:$(FINESWORD_IS_TINYCC)>>:-nodefaultlibs -nostartfiles>
+        # $<$<NOT:$<BOOL:${FINESWORD_IS_TINYCC}>>:-nodefaultlibs -nostartfiles>
+        $<$<NOT:$<BOOL:${FINESWORD_IS_TINYCC}>>:-nodefaultlibs>
+        $<$<NOT:$<BOOL:${FINESWORD_IS_TINYCC}>>:-nostartfiles>
         # TinyCC doesn't recognize these two
 
         -Wall -Wextra -Werror -Wpedantic
@@ -196,10 +202,12 @@ else()
 
         # if TinyCC, add -w to suppress STDC warning
         # NOTE: a lot of collateral damage as it disables all warnings 
-        $<$<BOOL:$(FINESWORD_IS_TINYCC)>:-w>
+        $<$<BOOL:${FINESWORD_IS_TINYCC}>:-w>
 
         # GCC equivalent
         # -fsignaling-nans -frounding-math
+
+        -DFINESWORD_VERSION="${FINESWORD_VERSION}"
     )
 endif()
 

@@ -21,9 +21,9 @@ cc -Iinclude -O2 -std=c99 \
     -Wcast-qual -Wvla -Wunused-variable -Wunused-value \
     -Wno-unused-function \
     -Wno-unknown-pragmas \
-    -lm -D_POSIX_C_SOURCE=200112L -fopenmp \
     src/*/*.c \
     tests/*/*/*.c tests/*/*.c tests/*.c \
+    -lm -D_POSIX_C_SOURCE=200112L -fopenmp \
     -o "$EXEC_NAME"
 
 echo "[+] Done."

@@ -6,13 +6,13 @@
  * See COPYING and COPYING.LESSER for the full license text.
  */
 
-#ifndef FINESWORD_TESTS_FUN_ALL_H
-#define FINESWORD_TESTS_FUN_ALL_H
+#ifndef FINESWORD_TESTS_MODULE_ALL_H
+#define FINESWORD_TESTS_MODULE_ALL_H
 
 #include "finesword/rudiments/types.h"
 
 
-#define FINESWORD_TESTS_FUN_REGISTRY_REGISTER_ALL \
+#define FINESWORD_TESTS_MOD_REGISTRY_REGISTER_ALL \
     REGISTERX(d1_nan)                             \
     REGISTERX(show_supported)                     \
     REGISTERX(exh_unary32)                        \
@@ -25,7 +25,8 @@
     REGISTERX(list_binary128)                     \
     REGISTERX(test)                               \
     REGISTERX(xoshiro256pp)                       \
-    REGISTERX(perf)
+    REGISTERX(perf)                               \
+    REGISTERX(help)
 
 
 #define CV const int argc, const char *const *const argv
@@ -56,6 +57,8 @@ bool xoshiro256pp(CV); // +
  */
 bool perf(CV); // +
 
+bool help(CV);
+
 #undef CV
 
-#endif /* FINESWORD_TESTS_FUN_ALL_H */
+#endif /* FINESWORD_TESTS_MODULE_ALL_H */

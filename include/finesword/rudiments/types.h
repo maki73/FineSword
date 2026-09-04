@@ -82,7 +82,7 @@ typedef signed   short       i16;
 #define I16_C(c)  c
 FINESWORD_STATIC_ASSERT(sizeof(unsigned short) == 2, unsigned_short_is_assumed_to_be_2_bytes);
 typedef unsigned short       u16;
-#define U16_C(c)  c ## U
+#define U16_C(c)  ((u16)(c ## U)) // cast explicitly
 
 FINESWORD_STATIC_ASSERT(sizeof(signed   int) == 4,   signed_int_is_assumed_to_be_4_bytes);
 #define I32_C(c)  c

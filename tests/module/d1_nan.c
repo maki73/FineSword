@@ -6,7 +6,7 @@
  * See COPYING and COPYING.LESSER for the full license text.
  */
 
-#include "finesword_tests/fun/all.h"
+#include "finesword_tests/module/all.h"
 
 #include "finesword/config.h"
 #include "finesword/rudiments/ieee754.h"

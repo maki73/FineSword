@@ -6,7 +6,8 @@
  * See COPYING and COPYING.LESSER for the full license text.
  */
 
-#include "finesword_tests/fun/all.h"
+#include "finesword_tests/module/all.h"
+
 #include "finesword_tests/shared/print.h"
 #include "finesword_tests/shared/prng.h"
 #include "finesword_tests/shared/sys_helpers.h"
@@ -20,7 +21,7 @@
 #include <inttypes.h>
 
 
-/* in pixels; SHALL be resonable so don't touch arbitrarily */
+/* in pixels; SHALL be reasonable so don't touch arbitrarily */
 #define WIDTH  ((size_t)4096)
 #define HEIGHT ((size_t)4096)
 // #define WIDTH  ((size_t)104)

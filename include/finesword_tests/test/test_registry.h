@@ -55,7 +55,7 @@ typedef struct {
 
 /* NOTE: name of an absent function (function whose pointer is NULL) SHALL be "NULL"
  * or "NULLN" where N is the width (e.g., "NULL32" for f32).
- * NULL **name strings** are invalid and the program will immediately abort upon encoutering one.
+ * NULL **name strings** are invalid and the program will immediately abort upon encountering one.
  */
 
 // if steam == NULL -> stream = stdout 

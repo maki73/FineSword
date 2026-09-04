@@ -91,8 +91,8 @@ To enable/disable ANSI do the equivalent as above but for
 `FINESWORD_TESTS_USE_ANSI`, this is especially relevant if you plan to pipe the `main`'s output.
 
 `FINESWORD_BINARY_FP_D1_SET_IS_QUIET` is used to control the assumed NaNs polarity. If it's 1, the recommend IEEE 754 binary NaN encoding will be assumed.
-Module "d1_nan" of *fun registry* (usually invoked via "./build/main d1_nan") is intended to test this assumption at runtime.
-See the "Quieter" part of [exception.h](include/finesword/rudiments/exception.h) and [d1_nan.c](tests/fun/d1_nan.c) file for more implementation specific information. 
+Module "d1_nan" of *module registry* (usually invoked via "./build/main d1_nan") is intended to test this assumption at runtime.
+See the "Quieter" part of [exception.h](include/finesword/rudiments/exception.h) and [d1_nan.c](tests/module/d1_nan.c) file for more implementation specific information. 
 
 Generally, Heuristics pick the config's options at compile-time.
 

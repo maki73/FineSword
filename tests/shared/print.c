@@ -116,7 +116,7 @@ void void_fprintf(FILE *stream, const char *restrict format, ...) {
         if (stream == NULL) {
             stream = stdout;
         }
-        // suboptimal but as straightfoward as it gets 
+        // suboptimal but as straightforward as it gets 
         u128 hi128 = x >> 64U;
         u128 lo128 = x & FINESWORD_U128_C_HI_LO(U64_C(0x0000000000000000), U64_C(0xFFFFFFFFFFFFFFFF));
         uint64_t high = (uint64_t)hi128;

@@ -6,7 +6,7 @@
  * See COPYING and COPYING.LESSER for the full license text.
  */
 
-#include "finesword_tests/fun/all.h"
+#include "finesword_tests/module/all.h"
 
 #include "finesword_tests/shared/print.h"
 #include "finesword_tests/test/performance/tester.h"

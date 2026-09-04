@@ -6,33 +6,41 @@
  * See COPYING and COPYING.LESSER for the full license text.
  */
 
-#include "finesword_tests/fun/all.h"
+#include "finesword_tests/module/all.h"
 
-#include "finesword_tests/test/correctness/exhaustive.h"
+#include "finesword_tests/test/correctness/list.h"
 #include "finesword_tests/shared/print.h"
 #include "finesword_tests/shared/sys_helpers.h"
 #include "finesword_tests/shared/utilities.h"
-#include "finesword_tests/reference/exh_broken.h"
+#include "finesword_tests/reference/class_broken.h"
 
 #include <fenv.h>
 #pragma STDC FENV_ACCESS ON
 
+#if !FINESWORD_TARGET_128BIT_FLOAT
+bool list_binary128(const int argc, const char *const *const argv) {
+    if (argc > 0) {
+        warning_printf("ignoring argument(s)\n");
+    }
+    (void)argv;
 
+    info_printf("the project was compiled without 128-bit floating-point support.\n");
+    return true;
+}
+#else
 /* -- Wrapper --- */
 
-static bool test_passes_exhaustive_unary_binary32(
-    f32 (*ref_fn)(f32),
-    f32 (*test_fn)(f32),
+static bool test_passes_list_binary_binary128(
+    f128 (*ref_fn)(f128, f128),
+    f128 (*test_fn)(f128, f128),
     const bool are_nans_special,
-    const bool is_quietcomputational,
     const int rounding_direction,
     //
     bool expected_ret,
     const char *ref_fn_name,
     const char *test_fn_name
 )
-{    
-    // ref_fn/test_fn not checked for NULL (this is a pass-through function)
+{
     if ((ref_fn_name == NULL) || (test_fn_name == NULL)) {
         error_printf("invalid argument(s) passed to test's wrapper!\n");
         return false;    
@@ -44,9 +52,6 @@ static bool test_passes_exhaustive_unary_binary32(
     info_printf("    are_nans_special:      ");
     void_printf("%s\n", are_nans_special
         ? TESTS_ANSI_GREEN "true" TESTS_ANSI_RESET : TESTS_ANSI_RED "false" TESTS_ANSI_RESET);
-    info_printf("    is_quietcomputational: ");
-    void_printf("%s\n", is_quietcomputational
-        ? TESTS_ANSI_GREEN "true" TESTS_ANSI_RESET : TESTS_ANSI_RED "false" TESTS_ANSI_RESET);
     info_printf("    rounding_direction:    ");
     report_rounding_direction(rounding_direction, stdout);
 
@@ -54,11 +59,10 @@ static bool test_passes_exhaustive_unary_binary32(
         ? TESTS_ANSI_GREEN "SUCCESS" TESTS_ANSI_RESET : TESTS_ANSI_RED "FAILURE" TESTS_ANSI_RESET);
 
     i64 t1 = ns_now_helper();
-    bool r = passes_exhaustive_unary_binary32(
+    bool r = passes_list_binary_binary128(
         ref_fn,
         test_fn,
         are_nans_special,
-        is_quietcomputational,
         rounding_direction
     );
     i64 t2 = ns_now_helper();
@@ -74,18 +78,17 @@ static bool test_passes_exhaustive_unary_binary32(
 
     info_print_time_took(t1, t2);
 
+
     return true;
 }
 
-
 /* --- Main --- */
 
-#define DOIT(ref, test, are_nans_special, is_quietcomputational, rounding_direction, expected_ret) \
-    if (!test_passes_exhaustive_unary_binary32( \
+#define DOIT(ref, test, are_nans_special, rounding_direction, expected_ret) \
+    if (!test_passes_list_binary_binary128(      \
         ref,                                    \
         test,                                   \
         are_nans_special,                       \
-        is_quietcomputational,                  \
         rounding_direction,                     \
         expected_ret,                           \
         #ref,                                   \
@@ -96,16 +99,15 @@ static bool test_passes_exhaustive_unary_binary32(
         success_printf("ok\n\n");               \
     }
 
-
-bool exh_unary32(const int argc, const char *const *const argv) {
+bool list_binary128(const int argc, const char *const *const argv) {
     if (argc > 0) {
         warning_printf("ignoring argument(s)\n");
     }
     (void)argv;
 
-    void_printf("--- Exhaustive Checker's Test ---\n\n");
-    void_printf("function: passes_exhaustive_unary_binary32\n");
-    
+    void_printf("--- List Checker's Test ---\n\n");
+    void_printf("function: passes_list_binary_binary128\n");
+
     fenv_t to_restore;
     if (feholdexcept(&to_restore) != 0) {
         error_printf("failed to set floating-point environment!\n");
@@ -115,44 +117,37 @@ bool exh_unary32(const int argc, const char *const *const argv) {
         error_printf("failed to clear floating-point exceptions!\n");
         goto fail;
     }
-
-
+    
     info_printf("\n- basic sanity checks -\n\n");
-    DOIT(abs_reference_f32, abs_reference_f32, false, true, FE_TONEAREST, true)
-    DOIT(abs_reference_f32, abs_reference_f32, true, false, FE_TONEAREST, true)
-    DOIT(abs_reference_f32, abs_reference_f32, true, true,  FE_DOWNWARD,  true)
+    DOIT(copysign_reference_f128, copysign_reference_f128, false, FE_TONEAREST, true);
+    DOIT(copysign_reference_f128, copysign_reference_f128, true,  FE_UPWARD,    true);
 
     info_printf("-- functions with injected failures --\n");
-    info_printf("NOTE: is_quietcomputational=false tests with exceptions mismatch should also give an exact offender\n");
+    info_printf("NOTE: they should always give an exact offender\n");
 
     info_printf("\n- incorrect exceptions -\n\n");
-    DOIT(abs_reference_f32,
-     abs_spurious_underflow_0x81234567_to_0x812345CB_f32, false, true,  FE_TONEAREST, false)
-    DOIT(abs_reference_f32,
-     abs_spurious_underflow_0x81234567_to_0x812345CB_f32, false, false, FE_TONEAREST, false)    
+    DOIT(copysign_reference_f128,
+        copysign_spurious_inexact_forall_x_nans_y_nans_f128, false, FE_TONEAREST, false);
+    DOIT(copysign_reference_f128,
+        copysign_spurious_inexact_forall_x_nans_y_nans_f128, true,  FE_TONEAREST, false);
 
     info_printf("\n- incorrect datum -\n\n");
-    DOIT(abs_reference_f32,
-     abs_return_negative_0x81234567_to_0x812345CB_f32, true, true,  FE_TONEAREST, false)
-    DOIT(abs_reference_f32,
-     abs_return_negative_0x81234567_to_0x812345CB_f32, true, false, FE_TONEAREST, false)  
-    
+    DOIT(copysign_reference_f128,
+        copysign_return_negative_forall_x_normals_y_pos_zero_f128, false, FE_TONEAREST, false);
+    DOIT(copysign_reference_f128,
+        copysign_return_negative_forall_x_normals_y_pos_zero_f128, true,  FE_TONEAREST, false);
+
     info_printf("\n- rounding direction sensitive exception failure -\n\n");
-    DOIT(abs_reference_f32,
-     abs_spurious_invalid_0x62697473_under_downward_f32,  true, true,  FE_TONEAREST, true)
-    DOIT(abs_reference_f32,
-     abs_spurious_invalid_0x62697473_under_downward_f32,  false,false, FE_TONEAREST, true)
-    DOIT(abs_reference_f32,
-     abs_spurious_invalid_0x62697473_under_downward_f32,  true, true,  FE_DOWNWARD,  false)
-    DOIT(abs_reference_f32,
-     abs_spurious_invalid_0x62697473_under_downward_f32,  false,false, FE_DOWNWARD,  false)
+    DOIT(copysign_reference_f128,
+        copysign_return_positive_forall_x_neg_y_neg_under_upward_f128, false, FE_TONEAREST, true);
+    DOIT(copysign_reference_f128,
+        copysign_return_positive_forall_x_neg_y_neg_under_upward_f128, true,  FE_TONEAREST, true);
+    DOIT(copysign_reference_f128,
+        copysign_return_positive_forall_x_neg_y_neg_under_upward_f128, false, FE_UPWARD,   false);
+    DOIT(copysign_reference_f128,
+        copysign_return_positive_forall_x_neg_y_neg_under_upward_f128, true,  FE_UPWARD,   false);
 
-    info_printf("\n- both exceptions and data failure at the first and the last bit patterns -\n\n");    
-    DOIT(abs_reference_f32,
-     abs_return_and_signal_nonsense_for_0xFFFFFFFF_f32,  false, false, FE_TOWARDZERO, false)
-    DOIT(abs_reference_f32,
-     abs_return_and_signal_nonsense_for_0x00000000_f32,  false, false, FE_TOWARDZERO, false)
-
+    // no boundaries
 
     if (fesetenv(&to_restore) != 0) {
         error_printf("failed to restore floating-point environment!\n");
@@ -168,3 +163,4 @@ fail:
     }
     return false; /* fail */
 }
+#endif /* FINESWORD_TARGET_128BIT_FLOAT */

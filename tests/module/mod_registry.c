@@ -6,11 +6,11 @@
  * See COPYING and COPYING.LESSER for the full license text.
  */
 
-#include "finesword_tests/fun/fun_registry.h"
+#include "finesword_tests/module/mod_registry.h"
 #include "finesword_tests/shared/print.h"
 
 /* --- All Headers Begin --- */
-#include "finesword_tests/fun/all.h"
+#include "finesword_tests/module/all.h"
 /* --- All Headers End --- */
 
 #include <stdio.h>
@@ -20,23 +20,23 @@
 
 #define REGISTERX(x) { .name = #x, .fn = (x)  },
 
-static const struct fun_handler_entry fun_registry_entries[] =
+static const struct mod_handler_entry mod_registry_entries[] =
 {
-    FINESWORD_TESTS_FUN_REGISTRY_REGISTER_ALL
+    FINESWORD_TESTS_MOD_REGISTRY_REGISTER_ALL
 };
 
-static const size_t fun_registry_count =
-    sizeof(fun_registry_entries) / sizeof(fun_registry_entries[0]);
+static const size_t mod_registry_count =
+    sizeof(mod_registry_entries) / sizeof(mod_registry_entries[0]);
 
 
 /* -- access fun -- */
 
-size_t fun_registry_get_count(void) {
-    return fun_registry_count;
+size_t mod_registry_get_count(void) {
+    return mod_registry_count;
 }
 
-enum fun_registry_search_status
-fun_registry_call_by_name(
+enum mod_registry_search_status
+mod_registry_call_by_name(
     const char *name,
     const int argc,
     const char *const *const argv,
@@ -47,12 +47,12 @@ fun_registry_call_by_name(
     if ((name == NULL) || (ret == NULL)) {
         return REGISTRY_INVAL_ARG;
     }
-    for (size_t i = 0; i < fun_registry_count; i++) {
-        if (fun_registry_entries[i].name == NULL) {
+    for (size_t i = 0; i < mod_registry_count; i++) {
+        if (mod_registry_entries[i].name == NULL) {
             abort();
         }
-        if (strcmp(name, fun_registry_entries[i].name) == 0) {
-            *ret = fun_registry_entries[i].fn(argc, argv);
+        if (strcmp(name, mod_registry_entries[i].name) == 0) {
+            *ret = mod_registry_entries[i].fn(argc, argv);
             return REGISTRY_OK;
         }
     }
@@ -60,16 +60,15 @@ fun_registry_call_by_name(
     return REGISTRY_NOT_FOUND;
 }
 
-void fun_registry_list_all_names(FILE *stream) {
+void mod_registry_list_all_names(FILE *stream) {
     if (stream == NULL) {
         stream = stdout; // default to stdout
     }
-    for (size_t i = 0; i < fun_registry_count; i++) {
-        if (fun_registry_entries[i].name == NULL) {
+    for (size_t i = 0; i < mod_registry_count; i++) {
+        if (mod_registry_entries[i].name == NULL) {
             abort();
         }
 
-        void_fprintf(stream, "    %s\n", fun_registry_entries[i].name);
+        void_fprintf(stream, "    %s\n", mod_registry_entries[i].name);
     }
 }
-

@@ -6,7 +6,7 @@
  * See COPYING and COPYING.LESSER for the full license text.
  */
 
-#include "finesword_tests/fun/all.h"
+#include "finesword_tests/module/all.h"
 
 #include "finesword_tests/test/correctness/list.h"
 #include "finesword_tests/shared/print.h"
@@ -18,11 +18,24 @@
 #pragma STDC FENV_ACCESS ON
 
 
+#if !FINESWORD_TARGET_128BIT_FLOAT
+bool list_unary128(const int argc, const char *const *const argv) {
+    if (argc > 0) {
+        warning_printf("ignoring argument(s)\n");
+    }
+    (void)argv;
+
+    info_printf("the project was compiled without 128-bit floating-point support.\n");
+    return true;
+}
+#else
+// NOTE: Basically a literal copy of exh_unary32/exh_unary16 test
+
 /* -- Wrapper --- */
 
-static bool test_passes_list_binary_binary64(
-    f64 (*ref_fn)(f64, f64),
-    f64 (*test_fn)(f64, f64),
+static bool test_passes_list_unary_binary128(
+    f128 (*ref_fn)(f128),
+    f128 (*test_fn)(f128),
     const bool are_nans_special,
     const int rounding_direction,
     //
@@ -49,7 +62,7 @@ static bool test_passes_list_binary_binary64(
         ? TESTS_ANSI_GREEN "SUCCESS" TESTS_ANSI_RESET : TESTS_ANSI_RED "FAILURE" TESTS_ANSI_RESET);
 
     i64 t1 = ns_now_helper();
-    bool r = passes_list_binary_binary64(
+    bool r = passes_list_unary_binary128(
         ref_fn,
         test_fn,
         are_nans_special,
@@ -74,7 +87,7 @@ static bool test_passes_list_binary_binary64(
 /* --- Main --- */
 
 #define DOIT(ref, test, are_nans_special, rounding_direction, expected_ret) \
-    if (!test_passes_list_binary_binary64(      \
+    if (!test_passes_list_unary_binary128(      \
         ref,                                    \
         test,                                   \
         are_nans_special,                       \
@@ -88,14 +101,14 @@ static bool test_passes_list_binary_binary64(
         success_printf("ok\n\n");               \
     }
 
-bool list_binary64(const int argc, const char *const *const argv) {
+bool list_unary128(const int argc, const char *const *const argv) {
     if (argc > 0) {
         warning_printf("ignoring argument(s)\n");
     }
     (void)argv;
 
     void_printf("--- List Checker's Test ---\n\n");
-    void_printf("function: passes_list_binary_binary64\n");
+    void_printf("function: passes_list_unary_binary128\n");
 
     fenv_t to_restore;
     if (feholdexcept(&to_restore) != 0) {
@@ -108,35 +121,39 @@ bool list_binary64(const int argc, const char *const *const argv) {
     }
     
     info_printf("\n- basic sanity checks -\n\n");
-    DOIT(copysign_reference_f64, copysign_reference_f64, false, FE_TONEAREST, true);
-    DOIT(copysign_reference_f64, copysign_reference_f64, true,  FE_UPWARD,    true);
+    DOIT(abs_reference_f128, abs_reference_f128, false, FE_TONEAREST, true);
+    DOIT(abs_reference_f128, abs_reference_f128, true,  FE_UPWARD,    true);
 
     info_printf("-- functions with injected failures --\n");
     info_printf("NOTE: they should always give an exact offender\n");
 
     info_printf("\n- incorrect exceptions -\n\n");
-    DOIT(copysign_reference_f64,
-        copysign_spurious_inexact_forall_x_nans_y_nans_f64, false, FE_TONEAREST, false);
-    DOIT(copysign_reference_f64,
-        copysign_spurious_inexact_forall_x_nans_y_nans_f64, true,  FE_TONEAREST, false);
+    DOIT(abs_reference_f128,
+        abs_spurious_inexact_forall_nans_f128, false, FE_TONEAREST, false);
+    DOIT(abs_reference_f128,
+        abs_spurious_inexact_forall_nans_f128, true,  FE_TONEAREST, false);
 
     info_printf("\n- incorrect datum -\n\n");
-    DOIT(copysign_reference_f64,
-        copysign_return_negative_forall_x_normals_y_pos_zero_f64, false, FE_TONEAREST, false);
-    DOIT(copysign_reference_f64,
-        copysign_return_negative_forall_x_normals_y_pos_zero_f64, true,  FE_TONEAREST, false);
+    DOIT(abs_reference_f128,
+        abs_return_negative_forall_subnormals_f128, false, FE_TONEAREST, false);
+    DOIT(abs_reference_f128,
+        abs_return_negative_forall_subnormals_f128, true,  FE_TONEAREST, false);
 
     info_printf("\n- rounding direction sensitive exception failure -\n\n");
-    DOIT(copysign_reference_f64,
-        copysign_return_positive_forall_x_neg_y_neg_under_upward_f64, false, FE_TONEAREST, true);
-    DOIT(copysign_reference_f64,
-        copysign_return_positive_forall_x_neg_y_neg_under_upward_f64, true,  FE_TONEAREST, true);
-    DOIT(copysign_reference_f64,
-        copysign_return_positive_forall_x_neg_y_neg_under_upward_f64, false, FE_UPWARD,   false);
-    DOIT(copysign_reference_f64,
-        copysign_return_positive_forall_x_neg_y_neg_under_upward_f64, true,  FE_UPWARD,   false);
+    DOIT(abs_reference_f128,
+        abs_return_negative_forall_infs_under_towardzero_f128, false, FE_TONEAREST, true);
+    DOIT(abs_reference_f128,
+        abs_return_negative_forall_infs_under_towardzero_f128, true,  FE_TONEAREST, true);
+    DOIT(abs_reference_f128,
+        abs_return_negative_forall_infs_under_towardzero_f128, false, FE_TOWARDZERO, false);
+    DOIT(abs_reference_f128,
+        abs_return_negative_forall_infs_under_towardzero_f128, true,  FE_TOWARDZERO, false);
 
-    // no boundaries
+    info_printf("\n- both exceptions and data failure at the boundaries -\n\n");    
+    DOIT(abs_reference_f128,
+        abs_return_and_signal_nonsense_for_neg_nan_maxpay_f128, false, FE_DOWNWARD, false);
+    DOIT(abs_reference_f128,
+        abs_return_and_signal_nonsense_for_pos_zero_f128,       false,  FE_DOWNWARD, false);
 
     if (fesetenv(&to_restore) != 0) {
         error_printf("failed to restore floating-point environment!\n");
@@ -152,3 +169,4 @@ fail:
     }
     return false; /* fail */
 }
+#endif /* FINESWORD_TARGET_128BIT_FLOAT */

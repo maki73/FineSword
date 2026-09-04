@@ -22,9 +22,9 @@ file(GLOB FINESWORD_TESTS_FILES CONFIGURE_DEPENDS
     ${FINESWORD_TESTS_SRC}/main.c
     ${FINESWORD_TESTS_SRC}/comptime/*.c
     ${FINESWORD_TESTS_SRC}/shared/*.c
-    ${FINESWORD_TESTS_SRC}/fun/*.c
-    ${FINESWORD_TESTS_SRC}/fun/exh/*.c
-    ${FINESWORD_TESTS_SRC}/fun/list/*.c
+    ${FINESWORD_TESTS_SRC}/module/*.c
+    ${FINESWORD_TESTS_SRC}/module/exh/*.c
+    ${FINESWORD_TESTS_SRC}/module/list/*.c
     ${FINESWORD_TESTS_SRC}/test/*.c
     ${FINESWORD_TESTS_SRC}/test/correctness/*.c
     ${FINESWORD_TESTS_SRC}/test/performance/*.c
@@ -87,6 +87,7 @@ if(MSVC)
         /permissive- /Zc:preprocessor
         /w14242 /w14244 /w14254 /w14267 /w14365
         /w14545 /w14546 /w14547 /w14549 /w14555
+        /DFINESWORD_VERSION="${FINESWORD_VERSION}"
     )
 elseif(FINESWORD_IS_LLVM)
     message(STATUS "Tests: using LLVM target compile options")
@@ -103,6 +104,8 @@ elseif(FINESWORD_IS_LLVM)
         # try fixing doc/ci.txt note 2 with this
         # ARM does not expose -fexcess-precision=16 option (it handles 16-bit float natively) 
         $<$<NOT:$<BOOL:${FINESWORD_IS_ARM}>>:-fexcess-precision=16>
+
+        -DFINESWORD_VERSION="${FINESWORD_VERSION}"
     )
 else()
     message(STATUS "Tests: using generic GCC-style target compile options")
@@ -119,6 +122,8 @@ else()
         
         # Add these here
         -fsignaling-nans -frounding-math
+
+        -DFINESWORD_VERSION="${FINESWORD_VERSION}"
     )
 endif()
 

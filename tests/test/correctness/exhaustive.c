@@ -102,7 +102,7 @@ bool passes_exhaustive_unary_binary32(
         }
         /* NOTE: if the setup above failed, threads will still enter the
          main loop running for N iterations before querying test_failed
-         and skipping (or cancelling) the remaining iterations.
+         and skipping (or canceling) the remaining iterations.
          */
 
         // private variables
@@ -121,7 +121,7 @@ bool passes_exhaustive_unary_binary32(
                 }
             }
             if (stop) {
-                /* if supported, try cancelling (it's a newer OpenMP 4.0+ feature)
+                /* if supported, try canceling (it's a newer OpenMP 4.0+ feature)
                  else, just skip */
                  #if defined(_OPENMP) && _OPENMP >= 201307
                     #pragma omp cancel for

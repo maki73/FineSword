@@ -33,8 +33,9 @@
 /* --- Invalid --- */
 
 /* Sadly, we generally cannot use addition(x, -0.0)
- * for both signaling invalid and queting (when x is sNaN)
- * (e.g., roundTowardNegative addition(+0.0, -0.0) = -0.0)
+ * for both signaling invalid operation exception and
+ * quieting the result when isSignaling(x).
+ * (e.g., roundTowardNegative addition(+0.0, -0.0) = -0.0, not +0.0)
  */
 
 /* SHALL signal invalid operation exception iff x is sNaN */
