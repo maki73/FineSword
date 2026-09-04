@@ -141,12 +141,12 @@ jobs:
       - name: CMake Build
         run: cmake --build build --config Release
 
-      - name: Test: Self
+      - name: Test Self
         if: matrix.compiler != 'TinyCC'
         run: |
           python auxiliary/comprehensive_self.py
 
-      - name: Test: External
+      - name: Test External
         if: matrix.compiler != 'TinyCC'
         run: |
           python auxiliary/functions_extern.py
