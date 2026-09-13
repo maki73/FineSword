@@ -18,10 +18,14 @@
  * -/ similar to <stdint.h> [C99 \S 7.18]
  *
  * NOTE: UN_C(), IN_C(C), and FN_C() macros correspond to
- * uN, iN, and fN exact-width types respectively, unlike C
- * macros [C99 \S 7.18.4.1] which correspond to int/uint_leastN_t
- * types. Additionally C99 does not define FLOATN_C()-style macros,
- * but we do.
+ *  uN, iN, and fN exact-width types respectively, unlike C
+ *  macros [C99 \S 7.18.4.1] which correspond to int/uint_leastN_t
+ *  types. Additionally C99 does not define FLOATN_C()-style macros,
+ *  but we do.
+ *
+ * NOTE: enabling support for 16/128-bit float(s) will
+ *  make code rely upon non-portable compiler extensions/features added
+ *  by newer revisions of ISO C and will disable -Wpedantic.
  *
  * Assumptions:
  * - 1 byte = 8 bits

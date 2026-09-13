@@ -24,7 +24,7 @@ bool perf(const int argc, const char *const *const argv) {
         error_printf("perf module expected at least four arguments!\n");
         error_printf("arguments: [name][inputs_count][repeats][\"random\"/\"sweep\"][hex seed]\n");
         error_printf("seed is mandatory if \"random\" else it's ignored\n");
-        error_printf("available name(s):\n");
+        error_printf("available test regisry name(s):\n");
         test_registry_list_all_fn_names(stderr);
         return false; /* fail */
     }
@@ -33,7 +33,7 @@ bool perf(const int argc, const char *const *const argv) {
     if (fn_name_matches_null_or_nulln(argv[0])) {
         error_printf("invalid name!\n");
         error_printf("'NULL' and 'NULLN' represent absent functions\n");
-        error_printf("available name(s):\n");
+        error_printf("available test regisry name(s):\n");
         test_registry_list_all_fn_names(stderr);
         return false; /* fail */
     }
@@ -41,7 +41,7 @@ bool perf(const int argc, const char *const *const argv) {
     const test_config *cfg = test_registry_get_config_pointer_by_fn_name(argv[0], &is_test_fn);
     if (cfg == NULL) {
         error_printf("retrieving config pointer failed!\n");
-        error_printf("available name(s):\n");
+        error_printf("available test regisry name(s):\n");
         test_registry_list_all_fn_names(stderr);
         return false; /* fail */
     }

@@ -11,11 +11,12 @@
 
 # -- Config
 
-FILES="
-    src/*.c src/*/*.c
-    include/*/*.h include/*/*/*.h
-    tests/*.c tests/*/*.c tests/*/*/*.c
-"
+# FILES="
+#     src/*.c src/*/*.c
+#     include/*/*.h include/*/*/*.h
+#     tests/*.c tests/*/*.c tests/*/*/*.c
+# "
+FILES=(src/ include/ tests/)
 
 MISRA_RULES=(
     "1.1" # don't violate C and constraints
@@ -83,9 +84,10 @@ GREP_PATTERN=()
 for rule in "${MISRA_RULES[@]}"; do
     GREP_PATTERN+=(-e "[$MISRA_PREFIX$rule]")
 done
-shopt -s nullglob
-FILES_EXPANDED=($FILES)
-shopt -u nullglob
+# shopt -s nullglob
+# FILES_EXPANDED=($FILES)
+# shopt -u nullglob
+mapfile -t FILES_EXPANDED < <(find "${FILES[@]}" -type f)
 
 if ((${#FILES_EXPANDED[@]} == 0)); then
     echo "[!] No files found!" >&2

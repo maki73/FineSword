@@ -1,13 +1,8 @@
-### NOTE
+## References
 
-Copies of the standards will not be provided due to
-possible illegality of this act.
+NOTE: PDFs/Copies of the following documents will not be provided by this project.
 
-Find copies on the Internet yourself, of course in a
-legal manner.
-
-
-### References:
+### Bibliography:
 
 - ISO/IEC 9899:1999 aka C99 (N1256 committee draft)
 - ISO/IEC 9899:2024 aka C23/C24 (N3220 committee draft)
@@ -18,3 +13,4 @@ legal manner.
 - IEEE Std 1003.1-2017 aka POSIX
 - Floating-Point Reference Sheet for Intel Architecture
 - *Scrambled Linear Pseudorandom Number Generators* by David Blackman and Sebastiano Vigna
+- BCP 14 e.i. RFC 2119 & RFC 8174

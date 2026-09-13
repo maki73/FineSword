@@ -22,6 +22,8 @@
  FINESWORD_PUSH_SIGNATURES_PREDICATE_BINARY
  */
 
+// NOTE: we won't use helper macros to not contaminate the environment more than necessary
+
 #if !FINESWORD_TARGET_16BIT_FLOAT && !FINESWORD_TARGET_128BIT_FLOAT
     #define FINESWORD_TEMPLATE_SPECIALIZE(tmpl) \
         tmpl(32)                                \

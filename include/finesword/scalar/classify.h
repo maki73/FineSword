@@ -71,17 +71,7 @@ NQ1(isquiet)
 // TODO: NQ2(totalordermag, f, x, y)
 
 // /* --- class() --- */
-// #define FP_DATUMS_CLASS_SNAN
-// #define FP_DATUMS_CLASS_QNAN
-// #define FP_DATUMS_CLASS_NEG_INF
-// #define FP_DATUMS_CLASS_NEG_NORMAL
-// #define FP_DATUMS_CLASS_NEG_SUBNORMAL
-// #define FP_DATUMS_CLASS_NEG_ZERO
-// #define FP_DATUMS_CLASS_POS_ZERO
-// #define FP_DATUMS_CLASS_POS_SUBNORMAL
-// #define FP_DATUMS_CLASS_POS_NORMAL
-// #define FP_DATUMS_CLASS_POS_INF
-
+// TODO: ...
 
 #undef NQ1
 #undef NQ2

@@ -18,10 +18,10 @@
 f32 w_fabsf(f32 x);
 f64 w_fabs(f64 x);
 #if FINESWORD_TARGET_16BIT_FLOAT
-    f16 w__builtin_fabsf16(f16 x);
+    f16 w___builtin_fabsf16(f16 x);
 #endif
 #if FINESWORD_TARGET_128BIT_FLOAT
-    f128 w__builtin_fabsf128(f128 x);
+    f128 w___builtin_fabsf128(f128 x);
 #endif
 
 
@@ -42,10 +42,10 @@ f64 w_fneg_f64(f64 x);
 f32 w_copysignf(f32 x, f32 y);
 f64 w_copysign(f64 x, f64 y);
 #if FINESWORD_TARGET_16BIT_FLOAT
-    f16 w__builtin_copysignf16(f16 x, f16 y);
+    f16 w___builtin_copysignf16(f16 x, f16 y);
 #endif
 #if FINESWORD_TARGET_128BIT_FLOAT
-    f128 w__builtin_copysignf128(f128 x, f128 y);
+    f128 w___builtin_copysignf128(f128 x, f128 y);
 #endif
 
 #endif /* FINESWORD_TESTS_REFERENCE_SIGN_H */

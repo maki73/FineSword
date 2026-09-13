@@ -14,6 +14,7 @@
 /* --- All Headers Begin --- */
 #include "finesword/scalar/sign.h"
 #include "finesword_tests/reference/sign.h"
+#include "finesword_tests/reference/classify.h"
 /* --- All Headers End --- */
 
 #include <stdlib.h>
@@ -22,9 +23,27 @@
 
 static const test_config test_registry_entries[] =
 {
-    UNARY_REGISTERX(abs_f, w__builtin_fabsf16, w_fabsf, w_fabs, w__builtin_fabsf128, false, true)
-    UNARY_REGISTERX(negate_f, w_fneg_f16, w_fneg_f32, w_fneg_f64, w_fneg_f128, false, true)
-    BINARY_REGISTERX(copysign_f, w__builtin_copysignf16, w_copysignf, w_copysign, w__builtin_copysignf128, false, true)
+    /* -- sign.h -- */
+    UNARY_REGISTERX(abs_f,       w___builtin_fabsf16,     w_fabsf,     w_fabs,     w___builtin_fabsf128,     false, true)
+    UNARY_REGISTERX(negate_f,    w_fneg_f16,              w_fneg_f32,  w_fneg_f64, w_fneg_f128,              false, true)
+    BINARY_REGISTERX(copysign_f, w___builtin_copysignf16, w_copysignf, w_copysign, w___builtin_copysignf128, false, true)
+
+    /* -- classify.h -- */
+    UNARY_REGISTERX(w_iszero_f,      w_ref_iszero_f16,         w_ref_iszero_f32,   w_ref_iszero_f64,   w_ref_iszero_f128,         false, true)
+    UNARY_REGISTERX(w_issignminus_f, w_m__builtin_signbit_f16, w_m_signbit_f32,    w_m_signbit_f64,    w_m__builtin_signbit_f128, false, true)
+    UNARY_REGISTERX(w_isnormal_f,    w_ref_isnormal_f16,       w_ref_isnormal_f32, w_ref_isnormal_f64, w_ref_isnormal_f128,       false, true)
+    UNARY_REGISTERX(w_issubnormal_f,
+        w_ref_isfinite_and_not_isnormal_and_not_iseq_zero_f16, w_ref_isfinite_and_not_isnormal_and_not_iseq_zero_f32,
+        w_ref_isfinite_and_not_isnormal_and_not_iseq_zero_f64, w_ref_isfinite_and_not_isnormal_and_not_iseq_zero_f128,
+        false, true)
+    UNARY_REGISTERX(w_isfinite_f, w_ref_isfinite_f16, w_ref_isfinite_f32, w_ref_isfinite_f64, w_ref_isfinite_f128, false, true)
+    UNARY_REGISTERX(w_isinfinite_f,
+        w_ref_not_finite_and_not_nan_f16, w_ref_not_finite_and_not_nan_f32,
+        w_ref_not_finite_and_not_nan_f64, w_ref_not_finite_and_not_nan_f128,
+        false, true)
+    UNARY_REGISTERX(w_isnan_f,       w_ref_isnan_f16,       w_ref_isnan_f32,       w_ref_isnan_f64,       w_ref_isnan_f128,       false, true)
+    UNARY_REGISTERX(w_issignaling_f, w_ref_issignaling_f16, w_ref_issignaling_f32, w_ref_issignaling_f64, w_ref_issignaling_f128, false, true)
+    UNARY_REGISTERX(w_isquiet_f,     w_ref_isquiet_f16,     w_ref_isquiet_f32,     w_ref_isquiet_f64,     w_ref_isquiet_f128,     false, true)
 };
 
 static const size_t test_registry_count =

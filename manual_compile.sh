@@ -8,12 +8,32 @@
 # See COPYING and COPYING.LESSER for the full license text.
 #
 
-set -euo pipefail
+set -eu
 
-EXEC_NAME="./main"
+# NOTES:
+#  Enabling 16/128-bit float(s) will disable -Wpedantic with #pragma directives
+#  Thou SHALT update FINESWORD_VERSION (such that it's same as in CMake configuration)
 
-echo "[~] Compiling single executable '$EXEC_NAME' with cc"
-cc -Iinclude -O2 -std=c99 \
+EXEC_NAME='./main'
+ADD_FLAGS=
+COMPILER=cc # default
+
+case ${ENABLE_LTO-} in
+    TRUE|true|ON|on|1)
+        echo "[~] LTO - enabled"
+        ADD_FLAGS="-flto"
+        ;;
+    *)
+        echo "[~] LTO - disabled"
+        ;;
+esac
+
+if [ "${CC+x}" = x ]; then
+    COMPILER=$CC
+fi
+
+echo "[~] Compiling single executable '$EXEC_NAME' with $COMPILER"
+"$COMPILER" -Iinclude -O2 -std=c99 \
     -Wall -Wextra -Wpedantic \
     -Wshadow -Wmissing-prototypes \
     -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference -Wformat=2 \
@@ -21,6 +41,8 @@ cc -Iinclude -O2 -std=c99 \
     -Wcast-qual -Wvla -Wunused-variable -Wunused-value \
     -Wno-unused-function \
     -Wno-unknown-pragmas \
+    $ADD_FLAGS \
+    -DFINESWORD_VERSION='"0.0.1"' \
     src/*/*.c \
     tests/*/*/*.c tests/*/*.c tests/*.c \
     -lm -D_POSIX_C_SOURCE=200112L -fopenmp \

@@ -113,3 +113,39 @@ NOTE #3:
 
     Absolutely astonishing, and kcuf all people who say "compiler is smarter than you"...
     well, for them maybe it's the case. 
+
+NOTE #4:
+    Just a fun fact: did you know that you can DoS current GCC by using C23's #embed?
+    Exempli gratia, to get OOM'd just
+    $ cat rand.c
+    int main(void) {
+        return
+    #embed </dev/urandom> // no limit()
+        ;
+    }
+    $ time gcc -march=native -std=c23 -Wpedantic -Wall -Wextra rand.c -o rand
+    gcc: fatal error: Killed signal terminated program cc1
+    compilation terminated.
+    gcc -march=native -std=c23 -Wpedantic -Wall -Wextra rand.c -o rand  0.01s user X.XXs system 99% cpu X.XXX total
+    $  gcc --version
+    gcc (GCC) 16.2.1 20260810
+    Copyright (C) 2026 Free Software Foundation, Inc.
+    This is free software; see the source for copying conditions.  There is NO
+    warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    
+    Clang simply refuses to do such things:
+    $ clang-24 -march=native -std=c23 -Wpedantic -Wall -Wextra rand.c -o rand
+    rand.c:3:8: error: device files are not yet supported by '#embed' directive
+        3 | #embed </dev/urandom> // no limit()
+        |        ^
+    rand.c:2:5: error: non-void function 'main' should return a value [-Wreturn-mismatch]
+        2 |     return
+        |     ^
+    2 errors generated.
+
+    UPDATE: you actually can do exactly the same thing using just #include
+    $ cat inf.c
+    #include </dev/urandom>
+    $ gcc -march=native -std=c23 -Wpedantic -Wall -Wextra inf.c -o inf
+    ^C
+    $ echo "you got the point."

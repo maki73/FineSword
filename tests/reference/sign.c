@@ -17,15 +17,16 @@
 
 /* See doc/ci.txt note 2
  */
-#define     LLVM_USE_EXPLICIT_BIT_W_FNEG_F16 1
+#define LLVM_USE_EXPLICIT_BIT_W_FNEG_F16 1
+
 #if defined(__i386__) || defined(__x86_64__)
     #define X86_USE_EXPLICIT_BIT_W_FABS_F16  1
 #else
     #define X86_USE_EXPLICIT_BIT_W_FABS_F16  0
 #endif
 
-/*  --- Abs() --- */
 
+/*  --- Abs() --- */
 
 f32 w_fabsf(f32 x) {
     return (f32)fabsf((float)x);
@@ -36,7 +37,7 @@ f64 w_fabs(f64 x) {
 }
 
 #if FINESWORD_TARGET_16BIT_FLOAT
-    f16 w__builtin_fabsf16(f16 x) {
+    f16 w___builtin_fabsf16(f16 x) {
         #if X86_USE_EXPLICIT_BIT_W_FABS_F16
             volatile u16 xi = asuint_f16(x);
             xi &= F16_ABS_MASK;
@@ -47,7 +48,7 @@ f64 w_fabs(f64 x) {
     }
 #endif
 #if FINESWORD_TARGET_128BIT_FLOAT
-    f128 w__builtin_fabsf128(f128 x) {
+    f128 w___builtin_fabsf128(f128 x) {
         return (f128)__builtin_fabsf128(x);
     }
 #endif
@@ -56,11 +57,11 @@ f64 w_fabs(f64 x) {
 /*  --- Negate() --- */
 
 f32 w_fneg_f32(f32 x) {
-    return -x;
+    return -(x);
 }
 
 f64 w_fneg_f64(f64 x) {
-    return -x;
+    return -(x);
 }
 
 #if FINESWORD_TARGET_16BIT_FLOAT
@@ -94,12 +95,12 @@ f64 w_copysign(f64 x, f64 y) {
 }
 
 #if FINESWORD_TARGET_16BIT_FLOAT
-    f16 w__builtin_copysignf16(f16 x, f16 y) {
+    f16 w___builtin_copysignf16(f16 x, f16 y) {
         return (f16)__builtin_copysignf16(x, y);
     }
 #endif
 #if FINESWORD_TARGET_128BIT_FLOAT
-    f128 w__builtin_copysignf128(f128 x, f128 y) {
+    f128 w___builtin_copysignf128(f128 x, f128 y) {
         return (f128)__builtin_copysignf128(x, y);
     }
 #endif

@@ -30,5 +30,21 @@ echo "[~] check d1_nan"
 export CC=tcc # assuming the last compile.sh compiler is TinyCC
 ./auxiliary/run_main.py "d1_nan"
 
+echo "[~] check Makefile examples"
+rm -rf build/
+export CC=clang
+./cmake_compile.sh > /dev/null 2>&1
+cd doc/
+make clean && make -j$(nproc)
+./example
+cd ..
+
+echo "[~] Check manual_compile.sh"
+./build/main help
+./manual_compile.sh
+./main help
+
+echo "[~] Cleanup"
+rm -rf build/ xoshiro256pp_dump_be.ppm main libfinesword.so doc/example example
 
 exit 0

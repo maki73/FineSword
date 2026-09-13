@@ -11,9 +11,10 @@ project(finesword_tests
     LANGUAGES C
 )
 
-# --------------------------------------------
-# FINESWORD TESTS SUBORDINATE CMAKE DIRECTORY 
-# --------------------------------------------
+# -----------------------------------------------------
+# FINESWORD TESTS SUBORDINATE CMAKE DIRECTORY
+#    - FINESWORD MATH LIBRARY'S TESTING INFRASTRUCTURE
+# -----------------------------------------------------
 
 
 # ---- COMPILE FINESWORD TESTS EXECUTABLE ----
@@ -42,7 +43,7 @@ target_include_directories(finesword_tests PUBLIC
 set_target_properties(finesword_tests PROPERTIES
     C_STANDARD  99            # C99
     C_STANDARD_REQUIRED TRUE  # require
-    C_EXTENSIONS        TRUE  # Extensions ALLOWED (e.g., OpenMP, POSIX)
+    C_EXTENSIONS        TRUE  # extensions ALLOWED (e.g., OpenMP, POSIX, etc.)
 )
 
 if(ENABLE_OMP)
@@ -77,7 +78,6 @@ endif()
 
 
 # --- COPIED FROM TOP-LEVEL ---
-# Only freestanding flags removed 
 #
 if(MSVC)
     message(STATUS "Tests: using MSVC target compile options")
@@ -120,7 +120,7 @@ else()
         -fsignaling-nans -frounding-math # new
         $<$<BOOL:${FINESWORD_IS_TINYCC}>:-w>
         
-        # Add these here
+        # add these here
         -fsignaling-nans -frounding-math
 
         -DFINESWORD_VERSION="${FINESWORD_VERSION}"

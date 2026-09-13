@@ -16,6 +16,14 @@ from pathlib import Path
 
 LIBS_PATH="build/"
 PYTHON="python3"
+FUN_LIST=(
+    # sign.h 
+    "negate", "abs", "copysign",
+    # classify.h
+    "w_iszero", "w_issignminus", "w_isnormal", "w_issubnormal",
+    "w_isfinite", "w_isinfinite", "w_isnan", "w_issignaling",
+    "w_isquiet"
+)
 
 def get_library_name_exit():
     s = platform.system() 
@@ -32,7 +40,7 @@ def get_library_name_exit():
 
     if len(lib_matches) == 1:
         return str(lib_matches[0])
-    elif len(exec_matches) > 1:
+    elif len(lib_matches) > 1:
         print("Ambiguous! Found more than one match!", file=sys.stderr, flush=True)
         sys.exit(1)
     else:
@@ -73,19 +81,19 @@ def run_main_args_exit(args):
         sys.exit(1)
     return
 
-def test_dispatch_dispatch_runtime_exit(test_name):
+def test_dispatch_dispatch_runtime_exit(test_name, dis16, dis32, dis64, dis128):
     lib = ctypes.CDLL(LIBS_PATH)
-    if finesword_supports_16bit_float(lib):
-        name = test_name + "f16"
+    if finesword_supports_16bit_float(lib) and not dis16:
+        name = test_name + "_f16"
         run_main_args_exit(["test", name])
-    if finesword_supports_32bit_float(lib):
-        name = test_name + "f32"
+    if finesword_supports_32bit_float(lib) and not dis32:
+        name = test_name + "_f32"
         run_main_args_exit(["test", name])
-    if finesword_supports_64bit_float(lib):
-        name = test_name + "f64"
+    if finesword_supports_64bit_float(lib) and not dis64:
+        name = test_name + "_f64"
         run_main_args_exit(["test", name])
-    if finesword_supports_128bit_float(lib):
-        name = test_name + "f128"
+    if finesword_supports_128bit_float(lib) and not dis128:
+        name = test_name + "_f128"
         run_main_args_exit(["test", name])
     return 0
 
@@ -93,17 +101,10 @@ def test_dispatch_dispatch_runtime_exit(test_name):
 # -- Main
 
 def main():
-    test_dispatch_dispatch_runtime_exit("abs_")
-    test_dispatch_dispatch_runtime_exit("negate_")
-    test_dispatch_dispatch_runtime_exit("copysign_")
+    for fun in FUN_LIST:
+        test_dispatch_dispatch_runtime_exit(fun, False, False, False, False)
+
     return 0
 
 if __name__ == "__main__":
     sys.exit(main())
-
-# print("LIBS_PATH: ", LIBS_PATH)
-# lib = ctypes.CDLL(LIBS_PATH)
-# print("finesword_supports_16bit_float:  ", "true" if finesword_supports_16bit_float(lib)  else "false")
-# print("finesword_supports_32bit_float:  ", "true" if finesword_supports_32bit_float(lib)  else "false")
-# print("finesword_supports_64bit_float:  ", "true" if finesword_supports_64bit_float(lib)  else "false")
-# print("finesword_supports_128bit_float: ", "true" if finesword_supports_128bit_float(lib) else "false")

@@ -6,7 +6,7 @@
 # See COPYING and COPYING.LESSER for the full license text.
 #
 cmake_minimum_required(VERSION 3.16)
-set(FINESWORD_VERSION "0.0.1")
+set(FINESWORD_VERSION "0.0.1") # DONT FORGET TO UPDATE MANUAL_COMPILE.SH
 project(finesword
     VERSION   ${FINESWORD_VERSION}
     LANGUAGES C
@@ -14,7 +14,8 @@ project(finesword
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE) # for linter
 
 # --------------------------------------------
-# FINESWORD TOP-LEVEL CMAKE DIRECTORY 
+# FINESWORD TOP-LEVEL CMAKE DIRECTORY
+#    - FINESWORD MATH LIBRARY
 # --------------------------------------------
 #
 set(FINESWORD_INCLUDE     ${PROJECT_SOURCE_DIR}/include) # for both tests and library
@@ -166,14 +167,14 @@ elseif(FINESWORD_IS_LLVM)
 
         -ffreestanding -nostdinc -nostdlib -nodefaultlibs # no -nostartfiles
 
-        -Wall -Wextra -Werror -Wpedantic 
+        -Wall -Wextra -Werror -Wpedantic # enabling 16/128-bit float(s) will disable -Wpedantic with #pragma directives
         -Wshadow -Wmissing-prototypes # -Wstrict-prototypes -> -Wmissing-prototypes
         -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference -Wformat=2
         -Wundef -Wwrite-strings -Warray-bounds -Wswitch-enum
         -Wcast-qual -Wvla -Wunused-variable -Wunused-value
 
         -Wno-unused-function
-        # No -Wno-unknown-pragmas (LLVM recognizes STDC FENV_ACCESS)
+        # LLVM recognizes STDC FENV_ACCESS
 
         # directly fixes ICX's complaints about STDC FENV_ACCESS,
         # indirectly sets the right tone for all LLVM-based compilers
@@ -187,7 +188,6 @@ else()
         -O2 -march=native
 
         -ffreestanding -nostdinc -nostdlib
-        # $<$<NOT:$<BOOL:${FINESWORD_IS_TINYCC}>>:-nodefaultlibs -nostartfiles>
         $<$<NOT:$<BOOL:${FINESWORD_IS_TINYCC}>>:-nodefaultlibs>
         $<$<NOT:$<BOOL:${FINESWORD_IS_TINYCC}>>:-nostartfiles>
         # TinyCC doesn't recognize these two
@@ -200,11 +200,12 @@ else()
         -Wno-unused-function
         -Wno-unknown-pragmas # GCC doesn't recognize STDC FENV_ACCESS pragma
 
-        # if TinyCC, add -w to suppress STDC warning
-        # NOTE: a lot of collateral damage as it disables all warnings 
+        # if TinyCC, add -w to suppress the pragma warning
+        # NOTE: a lot of collateral damage, as it disables all warnings 
         $<$<BOOL:${FINESWORD_IS_TINYCC}>:-w>
 
-        # GCC equivalent
+        # GCC equivalent;
+        # NOTE: GCC actually compiles cleanly without these
         # -fsignaling-nans -frounding-math
 
         -DFINESWORD_VERSION="${FINESWORD_VERSION}"

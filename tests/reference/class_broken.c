@@ -30,8 +30,8 @@
 /* --- references --- */
 
 f32 copysign_reference_f32(f32 x, f32 y) {
-    u32 xi = asuint_f32(x);
-    u32 yi = asuint_f32(y);
+    VOLATILEX u32 xi = asuint_f32(x);
+    VOLATILEX u32 yi = asuint_f32(y);
     xi &= F32_ABS_MASK;
     yi &= F32_SIGN_MASK;
     xi |= yi;
@@ -40,14 +40,14 @@ f32 copysign_reference_f32(f32 x, f32 y) {
 
 
 f64 abs_reference_f64(f64 x) {
-    u64 xi = asuint_f64(x);
+    VOLATILEX u64 xi = asuint_f64(x);
     xi &= F64_ABS_MASK;
     return asfloat_u64(xi);
 }
 
 f64 copysign_reference_f64(f64 x, f64 y) {
-    u64 xi = asuint_f64(x);
-    u64 yi = asuint_f64(y);
+    VOLATILEX  u64 xi = asuint_f64(x);
+    VOLATILEX  u64 yi = asuint_f64(y);
     xi &= F64_ABS_MASK;
     yi &= F64_SIGN_MASK;
     xi |= yi;
@@ -57,14 +57,14 @@ f64 copysign_reference_f64(f64 x, f64 y) {
 // optional
 #if FINESWORD_TARGET_128BIT_FLOAT
     f128 abs_reference_f128(f128 x) {
-        u128 xi = asuint_f128(x);
+        VOLATILEX u128 xi = asuint_f128(x);
         xi &= F128_ABS_MASK;
         return asfloat_u128(xi);
     }
 
     f128 copysign_reference_f128(f128 x, f128 y) {
-        u128 xi = asuint_f128(x);
-        u128 yi = asuint_f128(y);
+        VOLATILEX u128 xi = asuint_f128(x);
+        VOLATILEX u128 yi = asuint_f128(y);
         xi &= F128_ABS_MASK;
         yi &= F128_SIGN_MASK;
         xi |= yi;

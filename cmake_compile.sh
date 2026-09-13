@@ -19,4 +19,11 @@ cmake -S . -B "$BUILD_DIR" -DENABLE_TESTS="$TESTS" -DCMAKE_BUILD_TYPE=Release
 echo "[~] Building the project..."
 cmake --build "$BUILD_DIR" --config Release --parallel $(nproc)
 
+if [ -n "${CC+set}" ]; then
+    if [ "$CC" = "tcc" ]; then
+        echo "[~] patching-elf for TinyCC..."
+        patchelf --clear-execstack build/libfinesword.so
+    fi
+fi
+
 echo "[+] Done."

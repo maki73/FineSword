@@ -14,24 +14,28 @@ set -euo pipefail
 echo "[~] Removing the build directory"
 rm -rf ./build/
 
-echo "[~] Compiling with GCC"
+echo "[~] GCC"
 export CC=gcc
 ./cmake_compile.sh
+python auxiliary/functions_extern.py
 rm -rf ./build/
 
-echo "[~] Compiling with Clang"
+echo "[~] Clang"
 export CC=clang
 ./cmake_compile.sh
+python auxiliary/functions_extern.py
 rm -rf ./build/
 
-echo "[~] Compiling with ICX"
+echo "[~] ICX"
 export CC=icx
 ./cmake_compile.sh
+python auxiliary/functions_extern.py
 rm -rf ./build/
 
-echo "[~] Compiling with TinyCC"
+echo "[~] TinyCC"
 export CC=tcc
 ./cmake_compile.sh
+# TODO: non-exhaustive subset
 
 echo "[+] All done."
 exit 0

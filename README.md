@@ -1,4 +1,7 @@
-# FineSword Math Library
+[![FineSword CI (Native)](https://github.com/maki73/FineSword/actions/workflows/ci_native.yaml/badge.svg)](https://github.com/maki73/FineSword/actions/workflows/ci_native.yaml)
+[![FineSword CI (Linting)](https://github.com/maki73/FineSword/actions/workflows/ci_lint.yaml/badge.svg)](https://github.com/maki73/FineSword/actions/workflows/ci_lint.yaml)
+
+# FineSword
 
 FineSword Math Library is a self-contained math library written primarily in ISO C99
 and aimed at delivering a subset of IEEE Std 754-2019 (henceforth IEEE 754) -defined operations
@@ -11,6 +14,10 @@ appropriate for their rounding direction, along with *reasonable*
 performance for 32 and 64-bit width variants.
 When enabled, 16 and 128-bit variants behave correctly according to their semantics, but are not
 necessarily *reasonable* in terms of performance.
+
+Also, it's worth noting that FineSword Math Library and its Testing Infrastructure are separate parts
+of the project that should not be conflated.
+They have widly different code requirements and are also under separate licenses.
 
 ## Assumptions
 
@@ -27,9 +34,9 @@ Many additional assumptions regarding type widths can be found in the
 [types.h](include/finesword/rudiments/types.h) and [config.h](include/finesword/config.h) files.
 They are not considered *cornerstone* because they are localized and most importantly - can be easily
 changed. For instance, if your platform's `float` is not Binary32, you can easily swap it by changing
-the definition of `f32` in [types.h](include/finesword/rudiments/types.h) and (likely) changing
-its compile-time test at [types_related.h](tests/comptime/types_related.c), unless you don't need
-the Testing Infrastructure at all and therefore won't compile it.
+the definition of `f32` in [types.h](include/finesword/rudiments/types.h) (NOTE: for the Testing Infrastructure
+you would also need to change [comptime/](tests/comptime/) tests and [referece/](tests/reference/) implementations).
+
 
 ## Licensing
 
@@ -48,21 +55,22 @@ NOTE: SPDX License Identifiers are used throughout the project along with Copyri
 banners. The [LICENSES/](LICENSES/) directory is kept for compatibility with [REUSE](https://reuse.software/),
 which we use for linting.
 
+
 ## Build
 
-This project uses CMake, to build it first clone the repository:
+First clone the repository:
 ```bash
-$ git clone <PROJECT URL>
+$ git clone https://github.com/maki73/FineSword.git
 ```
 move to the cloned directory (e.g., with 'cd FineSword/')
 
-generate the projects build system and compile:
+then, since this project uses CMake, follow the ritual:
 ```bash
 $ cmake -S . -B build -DENABLE_TESTS=TRUE -DCMAKE_BUILD_TYPE=Release
 $ cmake --build build --config Release
 ```
 that will compile the `finesword` shared library (FineSword Math Library)
-and `main` executable (FineSword Math Library's Testing Infrastructure).
+and `main` executable (its Testing Infrastructure).
 
 ### CMake flags:
 
@@ -98,32 +106,39 @@ Generally, Heuristics pick the config's options at compile-time.
 
 ### Targets
 
-<!-- TODO: check that it's up to date -->
 | Arch     | OS       | Compiler   | Types            | Status     |
 |:--------:|:--------:|:----------:|:----------------:|:----------:|
 | x86_64   | Linux    | GCC        | F16,F32,F64,F128 | 1          |
-| x86_64   | Linux    | Clang, ICX | F16,F32,F64,F128 | 2          |
+| x86_64   | Linux    | Clang, ICX | F16,F32,F64,F128 | 1          |
 | x86_64   | Linux    | TinyCC     | F32,F64          | 3&dagger;  |
 | x86_64   | Windows  | MSVC       | F32,F64          | 3          |
 | AArch64  | Linux    | GCC, Clang | F16,F32,F64      | 2          |
 | AArch64  | macOS    | AppleClang | F16,F32,F64      | 3          |
 | s390x    | Linux    | GCC        | F32,F64,F128     | 3\*        |
 | PA-RISC  | NetBSD   | GCC        | F32,F64          | 3\*&dagger;|
-| AArch64  | FreeBSD  | Clang, GCC | F16,F32,F64      | 3\*&dagger;|
+<!-- | AArch64  | FreeBSD  | Clang, GCC | F16,F32,F64      | 3\*&dagger;|
+Basically useless as an actual target-->
 
 1 - works best; 2 - works great but some rough edges exist; 3 - functional
 
 \*emulated; &dagger; tested without exhaustive tests
 
-In general, the FineSword Math Library (NOTE: not the whole monorepo) should work on any target supporting C,
+In general, the FineSword Math Library should work on any target supporting C,
 including freestanding environments (but only with changes to the CMake configuration).
 
 NOTE: PA-RISC was compiled with [manual_compile.sh](manual_compile.sh) rather than CMake
-(which embeds FineSword Math Library in the `main` executable), because I wasn't able to get `cmake` running on it (at least yet).
+(which embeds the library in the `main` executable), because I wasn't able to get `cmake` running on it.
+
+If you ran into problems during the compilation of the library (such as incomprehensible macro failures),
+then first try disabling 16 and 128-bit float support (as was shown above).
+
 
 ## Usage & Examples
 
-NOTE: for performance tests, link against the FineSword Math Library **statically** (e.g., with [./manual_compile.sh](./manual_compile.sh))
+See [doc/](doc/) for some examples. They use Make, not CMake.
 
-<!-- TODO: Add examples -->
-->
+Going through the library's source code should be quite manageable since it's surprisingly concise
+(last time I checked include/finesword/ and src/ were under 2k LoC), just be aware of heavy preprocessor \[ab\]use.
+
+NOTE: for performance tests, link against the FineSword Math Library **statically** (e.g., with [./manual_compile.sh](./manual_compile.sh)).
+It also might be sensible to use LTO if testing wrapped functions (prefixed w_\*) against compiler builtins for fairness.

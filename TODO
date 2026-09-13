@@ -20,12 +20,13 @@ whatever it's called
 [ ] Figure out why finesword library still links against libc
 [ ] Think about adding RISC-V, LoongArch, or PowerPC.
 [+] Add linting with cppcheck to CI
-[ ] Think about noting in README that we use (or at least try to use) BCP 14 (e.i., RFC2119 and RFC8174)
+[~] Think about noting in README that we use (or at least try to use) BCP 14 (e.i., RFC2119 and RFC8174)
 [ ] TODO: Add verification for plus_constants.h
 [+] Note in README that users can -D FINESWROD_TARGET_16/128BIT_FLOAT=1/0
 [+] Add speed/performance tests
     [~] Read *Scrambled Linear Pseudorandom Number Generators* from start to end
-    [+] Implement xoshiro256++ or xoshiro256** (choose one) 
+    [+] Implement xoshiro256++ or xoshiro256** (choose one)
+        - done. Xoshiro256++ (plusplus scrambler) was chosen
     [+] Read/implement splitmix64 for seeding
     [+] Add visual PPM test for generate_pool() to fun/
     [+] Create the performance tester/dispatcher
@@ -40,3 +41,7 @@ whatever it's called
 [ ] Add (to the performance test) timers for ins/op cyc/op IPC bra/op etc.
 [~] TODO fix inconsistencies in <> vs [] for describing arguments
 [ ] SuperH?
+[+] Add classify references and tests
+[ ] Compile a reference <finesword/finesword.h> export sheet
+[ ] (somehow) Add lovecraft.h to comptime/ tests/
+[ ] Rewrite rules.sh to a clean Python script
